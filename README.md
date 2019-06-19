@@ -22,29 +22,9 @@ dependencies {
 ```
 
 ## Updates
-* 3.0.3
-</br>
-提升readByLength按长度读取的速度 [issue #26](/../../issues/26)
-
-* 3.0.2
-</br>
-修复初次连接失败时，因CountDownTimer导致崩溃的问题 [issue #24](/../../issues/24)
-
-* 3.0.1
-</br>
-修复包头验证bug，by zzdwuliang
-</br>
-增加地址检测的详细log
-</br>
-
-* 3.0.0
-</br>
-支持ReadToData和ReadToLength自动读取以下两种结构
-</br>
-常见包结构1：【包头（可选）】【正文】【包尾】
-</br>
-常见包结构2：【包头（可选）】【余下包长度（正文加包尾长度）（此部分也可做包头）（此部分长度固定）】【正文】【包尾（可选）】
-
+* 2.0.0
+对连续请求socket，报java.lang.IllegalThreadStateException: Thread already started错误，
+在原有线程不修改的情况下，增加异常处理机制
 ## Usage
 ### app模块下包含简单的使用demo
 ### 请一定设置读取策略socketClient.getSocketPacketHelper().setReadStrategy();
