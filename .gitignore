@@ -1,0 +1,14 @@
+# Android Studio
+*.iml
+.idea
+#.idea/workspace.xml - remove # and delete .idea if it better suit your needs.
+.gradle
+build/
+/local.properties
+/captures
+
+# OSX files
+.DS_Store
+
+# Windows thumbnail db
+Thumbs.db
