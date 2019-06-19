@@ -70,6 +70,7 @@ public class SocketClient {
         setDisconnecting(true);
 
         getDisconnectionThread().start();
+
     }
 
     public boolean isConnected() {
@@ -1079,43 +1080,46 @@ public class SocketClient {
                     self.setRunningSocket(null);
                 }
             }
+            try {
+                if (self.sendThread != null) {
+                    self.getSendThread().interrupt();
+                    self.setSendThread(null);
+                }
+                if (self.receiveThread != null) {
+                    self.getReceiveThread().interrupt();
+                    self.setReceiveThread(null);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                self.setDisconnecting(false);
+                self.setState(SocketClient.State.Disconnected);
+                self.setSocketInputReader(null);
+                self.setSocketConfigure(null);
 
-            if (self.sendThread != null) {
-                self.getSendThread().interrupt();
-                self.setSendThread(null);
+                if (self.hearBeatCountDownTimer != null) {
+                    self.hearBeatCountDownTimer.cancel();
+                }
+
+                if (self.getSendingPacket() != null) {
+                    self.__i__onSendPacketCancel(self.getSendingPacket());
+                    self.setSendingPacket(null);
+                }
+
+                SocketPacket packet;
+                while ((packet = self.getSendingPacketQueue().poll()) != null) {
+                    self.__i__onSendPacketCancel(packet);
+                }
+
+                if (self.getReceivingResponsePacket() != null) {
+                    self.__i__onReceivePacketCancel(self.getReceivingResponsePacket());
+                    self.setReceivingResponsePacket(null);
+                }
+
+                self.setDisconnectionThread(null);
+
+                self.__i__onDisconnected();
             }
-            if (self.receiveThread != null) {
-                self.getReceiveThread().interrupt();
-                self.setReceiveThread(null);
-            }
-
-            self.setDisconnecting(false);
-            self.setState(SocketClient.State.Disconnected);
-            self.setSocketInputReader(null);
-            self.setSocketConfigure(null);
-
-            if (self.hearBeatCountDownTimer != null) {
-                self.hearBeatCountDownTimer.cancel();
-            }
-
-            if (self.getSendingPacket() != null) {
-                self.__i__onSendPacketCancel(self.getSendingPacket());
-                self.setSendingPacket(null);
-            }
-
-            SocketPacket packet;
-            while ((packet = self.getSendingPacketQueue().poll()) != null) {
-                self.__i__onSendPacketCancel(packet);
-            }
-
-            if (self.getReceivingResponsePacket() != null) {
-                self.__i__onReceivePacketCancel(self.getReceivingResponsePacket());
-                self.setReceivingResponsePacket(null);
-            }
-
-            self.setDisconnectionThread(null);
-
-            self.__i__onDisconnected();
         }
     }
 
@@ -1389,5 +1393,4 @@ public class SocketClient {
             }
         }
     }
-
 }
