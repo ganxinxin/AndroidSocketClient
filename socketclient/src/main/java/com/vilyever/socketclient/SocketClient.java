@@ -59,7 +59,12 @@ public class SocketClient {
 
         getSocketConfigure().setCharsetName(getCharsetName()).setAddress(getAddress()).setHeartBeatHelper(getHeartBeatHelper()).setSocketPacketHelper(getSocketPacketHelper());
         setState(State.Connecting);
-        getConnectionThread().start();
+        if (getConnectionThread().getState().equals(Thread.State.NEW)) {
+            getConnectionThread().start();
+        }else{
+            disconnect();
+        }
+
     }
 
     public void disconnect() {
@@ -68,9 +73,11 @@ public class SocketClient {
         }
 
         setDisconnecting(true);
-
-        getDisconnectionThread().start();
-
+        if (getDisconnectionThread().getState().equals(Thread.State.NEW)) {
+            getDisconnectionThread().start();
+        }else{
+            new DisconnectionThread().start();
+        }
     }
 
     public boolean isConnected() {
