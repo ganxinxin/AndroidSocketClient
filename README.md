@@ -1,25 +1,4 @@
 # AndroidSocketClient
-socket client server简易封装
-
-## Import
-[JitPack](https://jitpack.io/)
-
-Add it in your project's build.gradle at the end of repositories:
-
-```gradle
-repositories {
-  // ...
-  maven { url "https://jitpack.io" }
-}
-```
-
-Step 2. Add the dependency in the form
-
-```gradle
-dependencies {
-  compile 'com.github.vilyever:AndroidSocketClient:3.0.3'
-}
-```
 
 ## Updates
 * 2.0.0
